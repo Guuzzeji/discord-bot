@@ -2,7 +2,7 @@ import { REST, Routes, Events } from "discord.js";
 
 import type { ChatInputCommandInteraction, Interaction } from "discord.js";
 
-import { CLIENT } from "../client/index";
+import { CLIENT } from "../Client";
 import { COMMAND_LIST, COMMAND_METADATA } from './CommandList';
 import { getEnvVar } from '../utils';
 

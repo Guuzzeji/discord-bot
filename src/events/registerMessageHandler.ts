@@ -1,6 +1,6 @@
 import { Events, ChannelType } from "discord.js";
 
-import { CLIENT } from "../client/index";
+import { CLIENT } from "../Client";
 import { getEnvVar } from "../utils";
 
 export function registerMessageHandler() {

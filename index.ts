@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { startClient } from './src/client/index';
+import { startClient } from "./src/Client";
 import { registerCommands } from './src/commands/registerCommands';
 import { registerMessageHandler } from './src/events/registerMessageHandler';
 
