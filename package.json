@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun index.ts",
     "lint": "eslint .",
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch *.ts ./* ./**"
   },
   "devDependencies": {
     "@types/bun": "latest"
