@@ -1,10 +1,10 @@
 import { REST, Routes, Events } from "discord.js";
 
-import type { ChatInputCommandInteraction, Interaction } from "discord.js";
-
 import { CLIENT } from "../Client";
 import { COMMAND_LIST, COMMAND_METADATA } from './CommandList';
 import { getEnvVar } from '../utils';
+
+import type { ChatInputCommandInteraction, Interaction } from "discord.js";
 
 export async function registerCommands() {
 
