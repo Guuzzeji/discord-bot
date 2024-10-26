@@ -84,7 +84,7 @@ export abstract class LLMQueueProcessor {
      */
     private processQueueItem() {
         setInterval(async () => {
-            logger.info(`Request: ${this.requestCounterMinute} | Token: ${this.tokenCounterMinute} | Queue: ${this.queue.length}`);
+            logger.info(`Request: ${this.requestCounterMinute} | Token: ${this.tokenCounterMinute} | Queue: ${this.queue.length} | Days: ${this.requestCounterDay}`);
 
             if (this.queue.length > 0 && !this.pauseQueueMinutes && !this.pauseQueueDays) {
                 const task = this.queue.shift();
