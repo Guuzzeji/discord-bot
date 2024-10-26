@@ -5,7 +5,7 @@ import { LLMQueueProcessor } from "../LLMQueueProcessor";
 import { dateDifferenceByDays, dateDifferenceByMinutes, logger } from "../../utils";
 
 import type { LLMQueueProcessorOptions } from "../../types/LLMQueueProcessorOptions";
-import { loadLastRateLimitsFromStorage, saveRateLimitsToStorage } from "../SaveRateLimit";
+import { loadLastRateLimitsFromStorage, saveRateLimitsToStorage } from "../saveRateLimit";
 import type { RateLimitInformation } from "../../types/RateLimitInformation";
 
 /**
