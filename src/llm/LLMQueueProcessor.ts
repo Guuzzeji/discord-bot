@@ -10,6 +10,7 @@ import type { LLMQueueProcessorOptions } from "../types/LLMQueueProcessorOptions
  */
 export abstract class LLMQueueProcessor {
     private queue: AIChatInput[] = [];
+
     private readonly SYSTEM_PROMPT: string;
     private readonly MAX_REQUESTS_PER_MINUTE: number;
     private readonly MAX_TOKEN_PER_MINUTE: number;
@@ -17,14 +18,16 @@ export abstract class LLMQueueProcessor {
     private readonly REQUEST_RATE_SECONDS: number;
     private readonly QUEUE_RATE_LIMIT_CHECK_SECONDS: number;
     private readonly MAX_SKIPS_PER_REQUEST: number; // Used to handle retries for a given prompt
-    private pauseQueueMinutes = false;
-    private pauseQueueDays = false;
-    private requestCounterMinute = 0;
-    private requestCounterDay = 0;
-    private tokenCounterMinute = 0;
-    private isQueueCheckRunning = false;
-    private coolDownMinutesTimer: NodeJS.Timer | null = null;
-    private coolDownDaysTimer: NodeJS.Timer | null = null;
+
+    protected pauseQueueMinutes = false;
+    protected pauseQueueDays = false;
+
+    protected requestCounterMinute = 0;
+    protected requestCounterDay = 0;
+    protected tokenCounterMinute = 0;
+    protected isQueueCheckRunning = false;
+    protected coolDownMinutesTimer: NodeJS.Timer | null = null;
+    protected coolDownDaysTimer: NodeJS.Timer | null = null;
 
     /**
      * Constructs an LLMQueueProcessor instance with the specified parameters.
@@ -143,7 +146,7 @@ export abstract class LLMQueueProcessor {
     /**
      * Resets the minute-based cooldown timer and counters after a specified duration.
      */
-    private createCoolDownMinutesTimer() {
+    protected createCoolDownMinutesTimer() {
         if (this.coolDownMinutesTimer) {
             clearTimeout(this.coolDownMinutesTimer);
             this.coolDownMinutesTimer = null;
@@ -160,7 +163,7 @@ export abstract class LLMQueueProcessor {
     /**
      * Resets the day-based cooldown timer and counters after a specified duration.
      */
-    private createCoolDownDaysTimer() {
+    protected createCoolDownDaysTimer() {
         if (this.coolDownDaysTimer) {
             clearTimeout(this.coolDownDaysTimer);
             this.coolDownDaysTimer = null;
@@ -181,4 +184,8 @@ export abstract class LLMQueueProcessor {
      * @returns {Promise<AIMessageChunk>} The response from the AI model.
      */
     protected abstract invokeModel(chatHistory: BaseMessage[]): Promise<AIMessageChunk>;
+
+    public abstract saveRateLimits(): void;
+
+    public abstract loadRateLimits(): void;
 }
