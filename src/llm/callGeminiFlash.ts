@@ -9,12 +9,19 @@ import type { LLMQueueProcessorOptions } from "../types/LLMQueueProcessorOptions
 
 const MODEL = new ChatGoogleGenerativeAI({
     model: "gemini-1.5-flash",
-    maxOutputTokens: 2048,
+    maxOutputTokens: 1000,
     apiKey: getEnvVar("GEMINI_API_KEY"),
     temperature: 0.7,
 });
 
-const SYSTEM_PROMPT = "You are a helpful AI assistant. Always think before responding to the user!";
+// ! NOTE: Discord has a 2000 character limit on messages, please keep this below 2000
+const SYSTEM_PROMPT = `
+# Role
+You are a helpful AI assistant. Always think before responding to the user! 
+
+# Response
+Keep you response short and to the point. About 500 words max.
+`;
 const MAX_REQUESTS_PER_MINUTE = 15;
 const MAX_TOKEN_PER_MINUTE = 1000000;
 const MAX_REQUESTS_PER_DAY = 1500;
@@ -22,17 +29,29 @@ const REQUEST_RATE_SECONDS = 3;
 const QUEUE_RATE_LIMIT_CHECK_SECONDS = 1;
 const MAX_SKIPS_PER_REQUEST = 3;
 
+/**
+ * A GeminiFlash is a LLMQueueProcessor that uses the Gemini Flash model.
+ */
 class GeminiFlash extends LLMQueueProcessor {
+    /**
+     * Constructs a new GeminiFlash instance with the specified parameters.
+     * @param {LLMQueueProcessorOptions} params - The configuration options for the processor.
+     */
     constructor(params: LLMQueueProcessorOptions) {
         super(params);
     }
 
+    /**
+     * Invokes the Gemini Flash model with the given chat history.
+     * @param {BaseMessage[]} chatHistory - The chat history to pass to the model.
+     * @returns {Promise<AIMessageChunk>} A promise that resolves with the model's response.
+     */
     protected async invokeModel(chatHistory: BaseMessage[]): Promise<AIMessageChunk> {
         return await MODEL.invoke(chatHistory);
     }
 }
 
-const geminiFlashModel = new GeminiFlash({
+const Gemini_Flash_Model = new GeminiFlash({
     systemPrompt: SYSTEM_PROMPT,
     maxRequestsPerMinute: MAX_REQUESTS_PER_MINUTE,
     maxTokenPerMinute: MAX_TOKEN_PER_MINUTE,
@@ -42,6 +61,10 @@ const geminiFlashModel = new GeminiFlash({
     maxSkipsPerRequest: MAX_SKIPS_PER_REQUEST
 });
 
+/**
+ * Adds a user input to the Gemini Flash queue and initiates queue processing.
+ * @param {AIChatInput} userInput - The chat input to add to the queue.
+ */
 export async function callGeminiFlash(userInput: AIChatInput) {
-    await geminiFlashModel.addToQueue(userInput);
+    await Gemini_Flash_Model.addToQueue(userInput);
 }
