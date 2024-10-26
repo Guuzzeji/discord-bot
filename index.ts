@@ -1,12 +1,12 @@
 import 'dotenv/config';
 
-import { startClient } from "./src/Client";
+import { initializeDiscordClient } from "./src/Client";
 import { registerCommands } from './src/commands/registerCommands';
-import { registerMessageHandler } from './src/events/registerMessageHandler';
+import { registerCreateMessageEvent } from './src/events/registerCreateMessageEvent';
 
 // Run server
 (async () => {
-    startClient();
-    registerMessageHandler()
+    initializeDiscordClient();
+    registerCreateMessageEvent()
     await registerCommands();
 })()

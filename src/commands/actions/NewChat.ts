@@ -1,9 +1,12 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import type { BotAction } from '../../types/BotAction';
+import type { SlashAction } from '../../types/SlashAction';
 import type { ChatInputCommandInteraction } from 'discord.js'
 
-export const NewChat: BotAction = {
+/**
+ * Creates a new AI chat
+ */
+export const NewChat: SlashAction = {
     data: new SlashCommandBuilder()
         .setName("newchat")
         .setDescription("Create a new ai chat")
