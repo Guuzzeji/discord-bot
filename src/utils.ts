@@ -1,3 +1,7 @@
+import pino from "pino";
+
+export const logger = pino({});
+
 /**
  * Retrieves the value of an environment variable.
  * 

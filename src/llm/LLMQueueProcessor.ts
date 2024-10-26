@@ -1,5 +1,6 @@
 import { AIMessage, AIMessageChunk, HumanMessage, SystemMessage, type BaseMessage } from "@langchain/core/messages";
 
+import { logger } from "../utils";
 import type { AIChatInput } from "../types/AIChatInput";
 import type { LLMQueueProcessorOptions } from "../types/LLMQueueProcessorOptions";
 
@@ -80,7 +81,7 @@ export abstract class LLMQueueProcessor {
      */
     private processQueueItem() {
         setInterval(async () => {
-            console.log(`Request: ${this.requestCounterMinute} | Token: ${this.tokenCounterMinute} | Queue: ${this.queue.length}`);
+            logger.info(`Request: ${this.requestCounterMinute} | Token: ${this.tokenCounterMinute} | Queue: ${this.queue.length}`);
 
             if (this.queue.length > 0 && !this.pauseQueueMinutes && !this.pauseQueueDays) {
                 const task = this.queue.shift();
@@ -109,7 +110,7 @@ export abstract class LLMQueueProcessor {
                 } catch (error) {
                     task.skips++;
                     this.queue.push(task);
-                    console.log(error);
+                    logger.error(error);
                 }
             }
         }, 1000 * this.REQUEST_RATE_SECONDS);
@@ -148,7 +149,7 @@ export abstract class LLMQueueProcessor {
             this.coolDownMinutesTimer = null;
         }
 
-        console.log("Creating cool down timer");
+        logger.info("Creating cool down timer for minutes");
         this.coolDownMinutesTimer = setTimeout(() => {
             this.pauseQueueMinutes = false;
             this.tokenCounterMinute = 0;
@@ -165,7 +166,7 @@ export abstract class LLMQueueProcessor {
             this.coolDownDaysTimer = null;
         }
 
-        console.log("Creating cool down timer");
+        logger.info("Creating cool down timer for days");
         this.coolDownDaysTimer = setTimeout(() => {
             this.pauseQueueDays = false;
             this.tokenCounterMinute = 0;

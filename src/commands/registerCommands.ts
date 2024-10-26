@@ -2,7 +2,7 @@ import { REST, Routes, Events } from "discord.js";
 
 import { CLIENT } from "../Client";
 import { COMMAND_LIST, COMMAND_METADATA } from './CommandList';
-import { getEnvVar } from '../utils';
+import { getEnvVar, logger } from '../utils';
 
 import type { ChatInputCommandInteraction, Interaction } from "discord.js";
 
@@ -43,8 +43,8 @@ export async function registerCommands() {
                 { body: COMMAND_METADATA }
             );
         }
-        console.log("Successfully registered application commands.");
+        logger.info("Successfully registered application commands.");
     } catch (error) {
-        console.error(error);
+        logger.error(error);
     }
 }

@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun index.ts",
-    "lint": "eslint .",
-    "dev": "bun --watch *.ts ./* ./**"
+    "lint": "eslint ./src/*",
+    "dev": "bun --watch *.ts ./* ./** | bun pino-pretty"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -22,6 +22,8 @@
     "dotenv": "^16.4.5",
     "eslint": "^9.13.0",
     "langchain": "^0.3.2",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
     "typescript-eslint": "^8.10.0"
   }
 }

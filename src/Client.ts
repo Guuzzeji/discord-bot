@@ -1,5 +1,7 @@
 import { Client, GatewayIntentBits, Events } from "discord.js";
 
+import { logger } from "./utils";
+
 /**
  * Create a new Discord Client instance
  */
@@ -19,7 +21,7 @@ export const CLIENT = new Client(
  */
 export function initializeDiscordClient() {
     CLIENT.once(Events.ClientReady, readyClient => {
-        console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+        logger.info(`Ready! Logged in as ${readyClient.user.tag}`);
     });
     CLIENT.login(process.env.DISCORD_BOT_TOKEN);
 }
