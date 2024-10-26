@@ -1,7 +1,7 @@
 import { ChannelType, Message, type OmitPartialGroupDMChannel } from "discord.js";
 
 import { getEnvVar } from "../../utils";
-import { callGeminiFlash } from "../../llm/callGeminiFlash";
+import { callGeminiFlash } from "../../llm/Gemini/callGeminiFlash";
 
 /**
  * Creates a new AI chat thread if the given message is from the bot and not already part of an AI chat thread.

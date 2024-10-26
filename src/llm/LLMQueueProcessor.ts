@@ -185,7 +185,13 @@ export abstract class LLMQueueProcessor {
      */
     protected abstract invokeModel(chatHistory: BaseMessage[]): Promise<AIMessageChunk>;
 
+    /**
+     * Saves the current state of the rate limits to persistent storage.
+     */
     public abstract saveRateLimits(): void;
 
+    /**
+     * Loads the current state of the rate limits from persistent storage.
+     */
     public abstract loadRateLimits(): void;
 }

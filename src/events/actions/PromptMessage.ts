@@ -1,6 +1,6 @@
 import { ChannelType, Message, type OmitPartialGroupDMChannel, type PublicThreadChannel } from "discord.js";
 
-import { callGeminiFlash } from "../../llm/callGeminiFlash";
+import { callGeminiFlash } from "../../llm/Gemini/callGeminiFlash";
 import { getEnvVar } from "../../utils";
 
 import type { AIChatItem } from "../../types/AIChatInput";
