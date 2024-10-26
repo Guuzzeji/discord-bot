@@ -1,7 +1,7 @@
 import { Ping } from './actions/Ping';
 import { NewChat } from './actions/NewChat';
 
-import type { BotAction } from './types/BotAction';
+import type { BotAction } from '../types/BotAction';
 
 export const COMMAND_METADATA = [
     Ping.data.toJSON(),

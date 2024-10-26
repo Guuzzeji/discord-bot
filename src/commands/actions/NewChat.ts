@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import type { BotAction } from '../types/BotAction';
+import type { BotAction } from '../../types/BotAction';
 import type { ChatInputCommandInteraction } from 'discord.js'
 
 export const NewChat: BotAction = {
