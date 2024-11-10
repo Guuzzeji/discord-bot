@@ -8,7 +8,7 @@ import { MESSAGE_ACTIONS } from "./MessageActions";
  * When a message is created, it iterates over all defined message actions
  * and executes them asynchronously.
  */
-export function registerCreateMessageEvent() {
+export function registerMessageCreateEvent() {
     CLIENT.on(Events.MessageCreate, async msg => {
         for (const action of MESSAGE_ACTIONS) {
             await action(msg);
