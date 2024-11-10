@@ -1,11 +1,11 @@
 import { AIMessageChunk, BaseMessage } from "@langchain/core/messages";
 
-import { GEMINI_MODEL_CALLER, RATE_LIMIT_FILE_NAME } from "./Model";
+import { GEMINI_MODEL_CALLER, RATE_LIMIT_FILE_NAME } from "./Metadata";
 import { LLMQueueProcessor } from "../LLMQueueProcessor";
+import { loadLastRateLimitsFromStorage, saveRateLimitsToStorage } from "../saveRateLimit";
 import { dateDifferenceByDays, dateDifferenceByMinutes, logger } from "../../utils";
 
 import type { LLMQueueProcessorOptions } from "../../types/LLMQueueProcessorOptions";
-import { loadLastRateLimitsFromStorage, saveRateLimitsToStorage } from "../saveRateLimit";
 import type { RateLimitInformation } from "../../types/RateLimitInformation";
 
 /**
@@ -20,11 +20,6 @@ export class GeminiFlash extends LLMQueueProcessor {
         super(params);
     }
 
-    /**
-     * Invokes the Gemini Flash model with the given chat history.
-     * @param {BaseMessage[]} chatHistory - The chat history to pass to the model.
-     * @returns {Promise<AIMessageChunk>} A promise that resolves with the model's response.
-     */
     protected async invokeModel(chatHistory: BaseMessage[]): Promise<AIMessageChunk> {
         return await GEMINI_MODEL_CALLER.invoke(chatHistory);
     }
@@ -68,6 +63,7 @@ export class GeminiFlash extends LLMQueueProcessor {
             }))
         }
 
+        // On exit events
         process.on('exit', () => {
             saveDataToStorage();
         });
