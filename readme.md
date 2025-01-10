@@ -1,4 +1,6 @@
-# LeetCode Discord Bot Source Code
+# LeetCode Discord Bot Source 
+
+This is a Discord bot written in TypeScript that uses the Discord.js library to create a bot that can help answer LeetCode problems. The bot is designed to be easy to use and provide a friendly way to practice LeetCode problems.
 
 ## .env Example
 
@@ -6,7 +8,6 @@
 DISCORD_BOT_TOKEN=<BOT_TOKEN>
 CLIENT_ID=<BOT_CLIENT_ID>
 SERVER_ID=<SERVER_ID>
-CHANNEL_ID=<CHANNEL_ID> // Note this is not used as of now, but can be used in the future
 GEMINI_API_KEY=<AI_KEY>
 ```
 
