@@ -1,4 +1,5 @@
-import 'dotenv/config';
+require('dotenv').config();
+console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY);
 
 import { initializeDiscordClient } from "./src/Client";
 import { registerCommands } from './src/commands/registerCommands';

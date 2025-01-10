@@ -1,3 +1,5 @@
+console.log('GOOGLE_API_KEY from process.env:', process.env.GOOGLE_API_KEY);
+
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { getEnvVar } from "../../utils";
 
@@ -7,7 +9,7 @@ import { getEnvVar } from "../../utils";
 export const GEMINI_MODEL_CALLER = new ChatGoogleGenerativeAI({
     model: "gemini-1.5-flash",
     maxOutputTokens: 1000,
-    apiKey: getEnvVar("GEMINI_API_KEY"),
+    apiKey: process.env.GOOGLE_API_KEY,
     temperature: 0.7,
 });
 
