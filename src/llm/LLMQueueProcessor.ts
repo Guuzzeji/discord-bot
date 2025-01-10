@@ -100,6 +100,8 @@ export abstract class LLMQueueProcessor {
                 const chatHistory = this.formatLLMInput(task);
                 try {
                     const modelResponse = await this.invokeModel(chatHistory);
+
+                    // TODO: Add a way for LLM to chunk longer response into multiple messages
                     await task.threadMessage.edit(modelResponse.content as string);
 
                     this.requestCounterMinute++;
