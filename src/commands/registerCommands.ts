@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { REST, Routes, Events } from "discord.js";
 
 import { CLIENT } from "../Client";
