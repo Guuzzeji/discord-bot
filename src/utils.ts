@@ -1,5 +1,9 @@
+import 'dotenv/config';
 import pino from "pino";
 
+/**
+ * Logger for logging messages to the console. (use this over console.log please)
+ */
 export const logger = pino({});
 
 /**
