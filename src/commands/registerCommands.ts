@@ -10,9 +10,12 @@ import type { ChatInputCommandInteraction, Interaction } from "discord.js";
 /**
  * Registers all commands in the COMMAND_LIST with the Discord API.
  * This needs to be done before the bot can receive any interactions.
+ * 
  * The commands are registered under the bot's id, and the server id if it exists.
+ * 
  * If the PROD environment variable is set, the commands are registered globally,
  * otherwise they are registered only for the server with the id in SERVER_ID.
+ * 
  * @returns {Promise<void>}
  */
 export async function registerCommands() {
@@ -28,7 +31,7 @@ export async function registerCommands() {
     const REST_API = new REST({ version: "10" }).setToken(getEnvVar("DISCORD_BOT_TOKEN"));
     try {
         // PROD = production
-        if (getEnvVar("PROD") !== "") {
+        if (getEnvVar("PROD") !== "TRUE") {
             await REST_API.put(
                 Routes.applicationCommands(
                     getEnvVar("CLIENT_ID"),
