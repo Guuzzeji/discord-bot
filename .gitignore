@@ -13,7 +13,7 @@ lerna-debug.log*
 # Caches
 
 .cache
-rate_limits_save
+rate-limits
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 
