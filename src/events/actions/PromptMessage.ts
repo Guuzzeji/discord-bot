@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import { ChannelType, Message } from "discord.js";
 
-import { callGeminiFlash } from "../../llm/Gemini/callGeminiFlash";
+import { GeminiFlash } from "../../llm/Gemini/GeminiFlash";
 import { getEnvVar } from "../../utils";
 
 import type { AIChatItem } from "../../types/AIChatInput";
@@ -27,7 +28,7 @@ export default async function PromptMessage(msg: OmitPartialGroupDMChannel<Messa
 
             // Creating message
             const originalMessage = await msg.channel.send("Waiting for AI to respond...");
-            await callGeminiFlash({
+            await GeminiFlash.addToQueue({
                 threadMessage: originalMessage,
                 prompt: msg.content,
                 chatHistory: await createChatHistory(msg.channel),

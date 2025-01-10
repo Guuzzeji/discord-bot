@@ -1,80 +1,45 @@
-import { AIMessageChunk, BaseMessage } from "@langchain/core/messages";
+import 'dotenv/config';
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
-import { GEMINI_MODEL_CALLER, RATE_LIMIT_FILE_NAME } from "./Metadata";
-import { LLMQueueProcessor } from "../LLMQueueProcessor";
-import { loadLastRateLimitsFromStorage, saveRateLimitsToStorage } from "../saveRateLimit";
-import { dateDifferenceByDays, dateDifferenceByMinutes, logger } from "../../utils";
-
-import type { LLMQueueProcessorOptions } from "../../types/LLMQueueProcessorOptions";
-import type { RateLimitInformation } from "../../types/RateLimitInformation";
+import GeminiFlashQueueProcessor from "./GeminiFlashQueueProcessor";
+import { getEnvVar } from '../../utils';
 
 /**
- * A GeminiFlash is a LLMQueueProcessor that uses the Gemini Flash model.
+ * This file is for storing model information for the Gemini model. As well as the caller for the model.
  */
-export class GeminiFlash extends LLMQueueProcessor {
-    /**
-     * Constructs a new GeminiFlash instance with the specified parameters.
-     * @param {LLMQueueProcessorOptions} params - The configuration options for the processor.
-     */
-    constructor(params: LLMQueueProcessorOptions) {
-        super(params);
-    }
+const GEMINI_MODEL_CALLER = new ChatGoogleGenerativeAI({
+    model: "gemini-1.5-flash",
+    maxOutputTokens: 1000,
+    apiKey: getEnvVar("GEMINI_API_KEY"),
+    temperature: 0.7,
+});
 
-    protected async invokeModel(chatHistory: BaseMessage[]): Promise<AIMessageChunk> {
-        return await GEMINI_MODEL_CALLER.invoke(chatHistory);
-    }
+// Rate limit file
+const RATE_LIMIT_FILE_NAME = "google-gen-ai-rate-limits.json";
 
-    public loadRateLimits(): void {
-        logger.info("Loading Gemini Flash rate limits");
-        const lastLimits = loadLastRateLimitsFromStorage<RateLimitInformation>(RATE_LIMIT_FILE_NAME);
+/**
+ * Create a new Gemini Flash instance with queue + rate limiting
+ */
+export const GeminiFlash = new GeminiFlashQueueProcessor({
+    systemPrompt: `
+    # Role
+    You are a helpful AI assistant. Always think before responding to the user! 
 
-        const currentDate = new Date(new Date().toUTCString());
-        const lastTime = lastLimits ? new Date(lastLimits.lastTime) : null;
+    # Response
+    Keep you response short and to the point. About 500 words max.`,
+    maxRequestsPerMinute: 15,
+    maxTokenPerMinute: 1000000,
+    maxRequestsPerDay: 1500,
+    requestRateSeconds: 3,
+    queueRateLimitCheckSeconds: 3,
+    maxSkipsPerRequest: 10,
+},
+    GEMINI_MODEL_CALLER,
+    RATE_LIMIT_FILE_NAME
+);
 
-        if (lastLimits && lastTime) {
-            // Check if number of days between last request made and now is less then 1 day
-            if (dateDifferenceByDays(currentDate, lastTime) < 1) {
-                this.pauseQueueDays = lastLimits.pauseQueueDays;
-                this.requestCounterDay = lastLimits.requestCounterDay;
-                this.createCoolDownDaysTimer();
-            }
+// Load rate limit data
+GeminiFlash.loadRateLimits();
+GeminiFlash.saveRateLimits();
 
-            // Check if time between last request made and now is less then 1 minute
-            if (dateDifferenceByMinutes(currentDate, lastTime) < 1) {
-                this.pauseQueueMinutes = lastLimits.pauseQueueMinutes;
-                this.requestCounterMinute = lastLimits.requestCounterMinute;
-                this.tokenCounterMinute = lastLimits.tokenCounterMinute;
-                this.createCoolDownMinutesTimer();
-            }
-        }
-    }
 
-    public saveRateLimits(): void {
-        // Save data to local storage as a json
-        const saveDataToStorage = () => {
-            logger.info("Saving Gemini Flash rate limits");
-            saveRateLimitsToStorage(RATE_LIMIT_FILE_NAME, JSON.stringify({
-                lastTime: new Date().toUTCString(),
-                pauseQueueMinutes: this.pauseQueueMinutes,
-                pauseQueueDays: this.pauseQueueDays,
-                requestCounterMinute: this.requestCounterMinute,
-                requestCounterDay: this.requestCounterDay,
-                tokenCounterMinute: this.tokenCounterMinute
-            }))
-        }
-
-        // On exit events
-        process.on('exit', () => {
-            saveDataToStorage();
-        });
-
-        // Use for when Ctrl + C is pressed
-        process.on('SIGINT', () => {
-            process.exit(0);
-        });
-
-        process.on('uncaughtException', () => {
-            process.exit(1);
-        });
-    }
-}
