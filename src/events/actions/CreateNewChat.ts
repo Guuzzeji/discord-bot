@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { ChannelType, Message, } from "discord.js";
 
-import { GeminiFlash } from "../../llm/Gemini/GeminiFlash";
+import GeminiFlash from "../../llm/Gemini/GeminiFlash";
 import { getEnvVar } from "../../utils";
 
 import type { OmitPartialGroupDMChannel } from "discord.js";

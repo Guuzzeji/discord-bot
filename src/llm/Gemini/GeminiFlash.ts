@@ -20,19 +20,19 @@ const RATE_LIMIT_FILE_NAME = "google-gen-ai-rate-limits.json";
 /**
  * Create a new Gemini Flash instance with queue + rate limiting
  */
-export const GeminiFlash = new GeminiFlashQueueProcessor({
+const GeminiFlash = new GeminiFlashQueueProcessor({
     systemPrompt: `
     # Role
     You are a helpful AI assistant. Always think before responding to the user! 
 
     # Response
-    Keep you response short and to the point. About 500 words max.`,
+    Keep you response short and to the point. About 1500 characters or less.`,
     maxRequestsPerMinute: 15,
     maxTokenPerMinute: 1000000,
     maxRequestsPerDay: 1500,
     requestRateSeconds: 3,
     queueRateLimitCheckSeconds: 3,
-    maxSkipsPerRequest: 10,
+    maxSkipsPerRequest: 3,
 },
     GEMINI_MODEL_CALLER,
     RATE_LIMIT_FILE_NAME
@@ -41,5 +41,7 @@ export const GeminiFlash = new GeminiFlashQueueProcessor({
 // Load rate limit data
 GeminiFlash.loadRateLimits();
 GeminiFlash.saveRateLimits();
+
+export default GeminiFlash;
 
 
